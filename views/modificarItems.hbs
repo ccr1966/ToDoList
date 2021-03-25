@@ -1,0 +1,41 @@
+<!doctype html>
+    <head>
+          <link rel='stylesheet' href='/styles/bootstrap.min.css' />
+	</head>  
+    
+<html>
+<body>
+
+<div class="container mt-5">
+    <form action="/items/confirmarModificacion" method="post" enctype="multipart/form-data">
+    {{#each items}}
+    <h1>Editing Task "{{descripcion}}"</h1>
+    <table>
+    <tr>
+        <td>
+            <input type="text" class="form-control" name="descripcion" value="{{descripcion}}" size="50">
+            </td>
+            <td width="20">
+        <input type="hidden"  name="id_item" value="{{id_item}}" size="50">
+        <input type="hidden" class="form-control" name="imagen" >
+        <input type="checkbox" class="form-control" name="hecho"  {{#if hecho}}checked{{/if}}>
+        </td>
+        
+    </p>
+    </tr> 
+
+    {{/each}}  
+    <tr>
+    <td colspan="2">
+    <input type="submit" value="Save">
+    <input type="cancel" value="Cancel">
+     </td>
+    </tr>
+    </table>
+         </form>
+   
+    
+   </div>
+  
+</body>
+</html>

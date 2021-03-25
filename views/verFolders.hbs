@@ -1,0 +1,56 @@
+<!doctype html>
+ 
+<html>
+<body>
+      <head>
+          <link rel='stylesheet' href='/styles/bootstrap.min.css' />
+          <link rel='stylesheet' href='/styles/bootstrap.css' />
+          <link rel='stylesheet' href='/styles/bootstrap-reboot.css' />
+          <link rel='stylesheet' href='/styles/bootstrap-grid.css' />
+          <link rel='stylesheet' href='/styles/bootstrap-grid.min.css' />
+          <link rel='stylesheet' href='/styles/bootstrap-reboot.css' />
+	</head>  
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <table>
+        <tr>
+          <td><img src="/img/carpetas.jpg"   height="80" alt=""></a>
+                 <a class="navbar-brand" href="#">Folders</td> 
+          <td width='600'>&nbsp;</td>
+          <td>
+            
+             {{#each folders}}
+             {{#if @first}} <a class="navbar-brand" href="/folders/alta/{{id_usuario}}">Add</a></td> {{/if}} 
+            {{/each}}            
+         <td><a class="navbar-brand" href="/..">Back</a> </td>
+         <td><a class="navbar-brand" href="/">Quit</a> </td>
+         <td width="500" align="right">{{#each folders}}
+             {{#if @first}} <font color="white">User: {{usuario}} {{/if}} 
+            {{/each}} </td>
+
+        </tr>
+        </table>
+</nav>
+<div class="jumbotron jumbotron-fluid" height="100%" width="100%">
+  <!--div class="container" width="100%"-->
+            
+  <div>
+ 
+    <table class="table table-hover" width="100%">
+  
+ {{#each folders}}
+
+   <tr>
+     
+      <td width="250">{{ nombre }}</td>
+      <td width="20" align="center"><big><a href="/items/listadoItems/{{id_folder}}/{{id_usuario}}">View Items</big></a></p></td>
+      <td width="20" align="center"><big><a href="/folders/baja/{{id_folder}}/{{id_usuario}}">Remove</big></a></td>
+
+    </tr>
+{{/each}}
+     
+</table>
+ 
+
+    </div>
+</body>
+</html>

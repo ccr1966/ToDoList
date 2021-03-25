@@ -1,0 +1,41 @@
+<!doctype html>
+    <head>
+          <link rel='stylesheet' href='/styles/bootstrap.min.css' />
+	</head>  
+    
+<html>
+<body>
+
+<div class="container mt-5">
+    <form action="/folders/confirmarModificacion" method="post" enctype="multipart/form-data">
+    {{#each folders}}
+    <h1>Editing Folder  "{{nombre}}"</h1>
+    <table>
+    <tr>
+        <td>
+            <input type="text" class="form-control" name="nombre" value="{{nombre}}" size="50">
+            </td>
+            <td width="20">
+        <input type="text"  name="id_usuario" value="{{id_usuario}}" >
+        <input type="hidden" class="form-control" name="imagen" >
+        <input type="hidden" name="id_folder"   value="{{id_folder}}">
+        </td>
+        
+    </p>
+    </tr> 
+
+    {{/each}}  
+    <tr>
+    <td colspan="2">
+    <input type="submit" value="Save">
+    <input type="cancel" value="Cancel">
+     </td>
+    </tr>
+    </table>
+         </form>
+   
+    
+   </div>
+  
+</body>
+</html>
