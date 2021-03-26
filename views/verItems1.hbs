@@ -23,7 +23,10 @@
           <td width="800" align="right">
             {{#each items}}  {{#if @first}} <a class=" navbar-brand" href="/items/alta/{{id_folder}}">Add</a> {{/if}} {{/each}}
             </td>
-             <td><a class="navbar-brand" href="javascript:history.back()">Back</a>  </td>
+             <td>
+                  {{#each items}}  {{#if @first}}
+                 <a class="navbar-brand" href="/folders/listadoFolders/{{id_usuario}}">Back</a> 
+                 {{/if}} {{/each}} </td>
          <td><a class="navbar-brand" href="/">Quit</a> </td>
           <td width="200" align="right">
             {{#each items}}

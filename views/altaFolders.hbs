@@ -7,23 +7,16 @@
 <body>
 
 <div class="container mt-5">
-   <h1>New Folder</h1>
-    <form action="/folders/alta" method="post" enctype="multipart/form-data"> 
+   <h1>New folder</h1>
+
+    <form action="/folders/alta" method="post" > 
    
-    <div class="form-group">
-        <label>Name:</label>
-        <input type="text" class="form-control" name="nombre" >
-        <input type="hidden" name="id_usuario"  value="{{id_usuario}}">
-    </div>
-    
-    <div class="form-group">
-        <label>Imagen:</label>
-        <input type="file" class="form-control" name="imagen">
-    </div>
-    
-    
-    
-    <input type="submit" value="Add">
+            <div class="form-group">
+                
+                <input type="text" class="form-control" name="nombre" >
+                <input type="hidden" name="id_usuario"  value="{{id_usuario}}">
+            </div>
+        <input type="submit" value="Add">
     </form>
    </div>
   

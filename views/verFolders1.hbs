@@ -16,9 +16,16 @@
           <td><img src="/img/carpetas.jpg"   height="80" alt=""></a>
                  <a class="navbar-brand" href="#">Folders</td> 
           <td width='600'>&nbsp;</td>
-          <td><a class="navbar-brand" href="/folders/alta/{{id_usuario}}">Add</a></td>
-           <td><a class="navbar-brand" href="javascript:history.back()">Back</a>  </td>
-         <td><a class="navbar-brand" href="/">Quit</a> </td>
+          <td>
+            
+             {{#each folders}}
+             {{#if @first}} <a class="navbar-brand" href="/folders/alta/{{id_usuario}}">Add</a></td> {{/if}} 
+            {{/each}}            
+         <td><a class="navbar-brand" href="/">Back</a></td>
+         <!--td><a class="navbar-brand" href="/">Quit</a> </td-->
+         <td width="500" align="right">{{#each folders}}
+             {{#if @first}} <font color="white">User: {{usuario}} {{/if}} 
+            {{/each}} </td>
         </tr>
         </table>
 </nav>
