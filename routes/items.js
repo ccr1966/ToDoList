@@ -1,13 +1,11 @@
+
 var express = require('express');
 var router = express.Router();
 
 //incluimos el paquete bd con la conexion a la tabla sql
 var bd=require('./bd');
 
-var bodyParser = require('body-parser');
-
-router.use(bodyParser.urlencoded({ extended: false }));
-
+router.use(express.urlencoded({ extended: false }));
 var v_hecho;
 
 //Alta de registros
@@ -38,7 +36,7 @@ router.post('/alta',  function(req, res, next) {
           }
       });    //query insert
 
-      consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = "  + req.body.id_folder ;
+      consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = "  + req.body.id_folder +" order by item.descripcion";
       console.log (consulta);
     
       bd.query(consulta, function(error,filas){
@@ -65,7 +63,7 @@ router.get('/listadoItems/:id_folder/:id_usuario', function(req, res, next) {
     
 
   console.log('LISTADO ITEMS  hace select de items')
-  consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + v_id_folder;
+  consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + v_id_folder + " order by item.descripcion";
 
     console.log(consulta);
 
@@ -77,28 +75,29 @@ router.get('/listadoItems/:id_folder/:id_usuario', function(req, res, next) {
             if (filas.length>0) {
                 res.render('verItems',{items:filas});
             } 
+            else{
+                consulta = "select folders.nombre, usuarios.usuario, usuarios.id_usuario, folders.id_folder from folders INNER JOIN USUARIOS ON folders.id_usuario=usuarios.id_usuario WHERE folders.id_folder= " + v_id_folder; 
+                console.log ('LISTADO ITEMS  segundo select  items ');
+                console.log (consulta);
+                bd.query(consulta, function(error,filas){
+                    if (error) {            
+                        console.log('error en la consulta SELECT de items');
+                        return;
+                    }
+                    if (filas.length>0) {
+                        res.render('verItems1',{items:filas});
+                    }
+                    else
+                    {
+                        res.render('MensajesAlUsuario',{mensaje:'Something wrong happens.. Sorry'});
+                    } 
+
+                });//query select 2 de items
+    
+            } //else filas es cero
+
         });//query select items
     
-    consulta = "select folders.nombre, usuarios.usuario, usuarios.id_usuario, folders.id_folder from folders INNER JOIN USUARIOS ON folders.id_usuario=usuarios.id_usuario WHERE folders.id_folder= " + v_id_folder; 
-  
-    console.log ('LISTADO ITEMS  segundo select  items ');
-    console.log (consulta);
-    bd.query(consulta, function(error,filas){
-            if (error) {            
-                console.log('error en la consulta SELECT de items');
-                return;
-            }
-            if (filas.length>0) {
-                res.render('verItems1',{items:filas});
-            }
-            else
-            {
-                res.render('MensajesAlUsuario',{mensaje:'Something wrong happens.. Sorry'});
-            } 
-    
-        });//query select 2 de items
-    
-
 });
 
 
@@ -153,22 +152,27 @@ console.log(v_hecho);
         console.log(error);
         return;
     }
-    });//query de UPDATE
+    else{
+        console.log('en CONFIRMAR MODIFICACION va a hacer select de items')
+        consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + req.body.id_folder +" order by item.descripcion";
+      
+          console.log(consulta);
+      
+          bd.query(consulta, function(error,filas){
+                  if (error) {            
+                      console.log('error en CONFIRMAR MODIFICACIONla consulta SELECT de items 2');
+                      return;
+                  }
+                  if (filas.length>0) {
+                      res.render('verItems',{items:filas});
+                  } 
+              });//query select items
 
-    console.log('en CONFIRMAR MODIFICACION va a hacer select de items')
-          consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + req.body.id_folder;
-        
-            console.log(consulta);
-        
-            bd.query(consulta, function(error,filas){
-                    if (error) {            
-                        console.log('error en CONFIRMAR MODIFICACIONla consulta SELECT de items 2');
-                        return;
-                    }
-                    if (filas.length>0) {
-                        res.render('verItems',{items:filas});
-                    } 
-                });//query select items
+    }
+
+});//query de UPDATE
+
+
 });
 
 
@@ -187,7 +191,7 @@ router.get('/baja/:id_item/:id_folder',  function(req, res, next) {
           
 
           console.log('en BAJA va a hacer select de items')
-          consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + id_folder;
+          consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + id_folder +" order by item.descripcion";
         
             console.log(consulta);
         
@@ -199,31 +203,28 @@ router.get('/baja/:id_item/:id_folder',  function(req, res, next) {
                     if (filas.length>0) {
                         res.render('verItems',{items:filas});
                     } 
-                });//query select items
-    
-    // si viene por aca, no quedaron items y hay que llamar a verItems1
-            consulta = "select folders.nombre, usuarios.usuario, usuarios.id_usuario, folders.id_folder from folders INNER JOIN USUARIOS ON folders.id_usuario=usuarios.id_usuario WHERE folders.id_folder= " + id_folder; 
-  
-            console.log ('segundo select  items ');
-            console.log (consulta);
-            bd.query(consulta, function(error,filas){
-                    if (error) {            
-                        console.log('error en la consulta SELECT de items');
-                        return;
-                    }
-                    if (filas.length>0) {
-                        res.render('verItems1',{items:filas});
-                    }
-                    else
-                    {
-                        res.render('MensajesAlUsuario',{mensaje:'Something wrong happens.. Sorry'});
-                    } 
-            
-                });//query select 2 de items
-            
+                    else{
+                        // si viene por aca, no quedaron items y hay que llamar a verItems1
+                        consulta = "select folders.nombre, usuarios.usuario, usuarios.id_usuario, folders.id_folder from folders INNER JOIN USUARIOS ON folders.id_usuario=usuarios.id_usuario WHERE folders.id_folder= " + id_folder; 
+                        
+                        console.log ('segundo select  items ');
+                        console.log (consulta);
+                        bd.query(consulta, function(error,filas){
+                                if (error) {            
+                                    console.log('error en la consulta SELECT de items');
+                                    return;
+                                }
+                                if (filas.length>0) {
+                                    res.render('verItems1',{items:filas});
+                                }
+                                else
+                                {
+                                    res.render('MensajesAlUsuario',{mensaje:'Something wrong happens.. Sorry'});
+                                } 
 
+                            });//query select 2 de items
+                    }
+                });//query select items
   });
 
-
-
-module.exports = router;
+  module.exports = router;

@@ -1,8 +1,7 @@
 
-var mysql = require('mysql');
+const mysql = require('mysql');
 
-
-/*conexion local 
+ 
 var cliente = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
@@ -12,8 +11,7 @@ var cliente = mysql.createConnection({
  });
   
  cliente.database = 'basetodolist';
-*/
-  
+ 
 /* cadena HEROKU
    mysql://bce33da1515f55
    :
@@ -22,7 +20,7 @@ var cliente = mysql.createConnection({
    us-cdbr-east-03.cleardb.com
    /heroku_b9f56a6726ed889
    ?reconnect=true
-*/
+
    var cliente = mysql.createConnection({
     host     : 'us-cdbr-east-03.cleardb.com',
     user     : 'bce33da1515f55',
@@ -31,7 +29,7 @@ var cliente = mysql.createConnection({
     database : 'heroku_b9f56a6726ed889'
   });
 
-  cliente.database = 'heroku_b9f56a6726ed889';
+*/  
 
   cliente.query("CREATE TABLE IF NOT EXISTS usuarios (`id_usuario` int(100) NOT NULL AUTO_INCREMENT,`usuario` varchar(20) NOT NULL,      `clave` varchar(20) NOT NULL,`nombre` varchar(50) NOT NULL,      `apellido` varchar(50) NOT NULL,      `email` varchar(50) NOT NULL,      `sitio_web` varchar(50) DEFAULT NULL,      PRIMARY KEY (`id_usuario`)    ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ", function (err, result) {  
     if (err) throw err;  
@@ -53,5 +51,6 @@ var cliente = mysql.createConnection({
     if (err) throw err;  
     console.log("query de creacion de tabla ITEMS ok. Si no existe se crea.");  
     });
-     
+
+console.log('este module.export=cliente le da eror cuando pasa dos veces pr aca?????')
 module.exports=cliente;

@@ -4,8 +4,8 @@ var router = express.Router();
 //incluimos el paquete bd con la conexion a la tabla sql
 var bd=require('./bd');
 
-var bodyParser = require('body-parser');
-router.use(bodyParser.urlencoded({ extended: false }));
+
+router.use(express.urlencoded({ extended: false }));
 
 //Alta de registros
 //Capturamos la ruta del alta y mostramos la plantilla correspondiente 
@@ -34,7 +34,7 @@ router.post('/alta', function(req, res, next) {
           }
         });//query insert
 
-          consulta = "select folders.nombre, folders.id_folder, usuarios.id_usuario, usuarios.usuario from folders INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE folders.id_usuario=" + req.body.id_usuario 
+          consulta = "select folders.nombre, folders.id_folder, usuarios.id_usuario, usuarios.usuario from folders INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE folders.id_usuario=" + req.body.id_usuario +" order by folders.nombre"
           console.log ('en ALTA POST'+consulta);
         
           bd.query(consulta, function(error,filas){
@@ -54,7 +54,7 @@ router.get('/listadoFolders/:id_usuario', function(req, res, next) {
   console.log('va a hacer select de folders');
   console.log('id_usuario ' + req.params.id_usuario);
   
-  consulta = "select folders.nombre, usuarios.usuario, usuarios.id_usuario, folders.id_folder from folders INNER JOIN USUARIOS ON folders.id_usuario=usuarios.id_usuario WHERE folders.id_usuario= " + req.params.id_usuario 
+  consulta = "select folders.nombre, usuarios.usuario, usuarios.id_usuario, folders.id_folder from folders INNER JOIN USUARIOS ON folders.id_usuario=usuarios.id_usuario WHERE folders.id_usuario= " + req.params.id_usuario +" order by folders.nombre"
   console.log (consulta);
  
  
@@ -90,6 +90,14 @@ router.get('/baja/:id_folder/:id_usuario',  function(req, res, next) {
     var id_folder = req.params.id_folder;
     var v_id_usuario= req.params.id_usuario;
  
+    var consulta  ="delete FROM items where id_folder =" + id_folder;
+    bd.query(consulta, function(error,filas){
+              if (error) {            
+                  console.log('error en delete');
+                  console.log(error);
+                  return;
+              }
+          });
 
     var consulta  ="delete FROM folders where id_folder =" + id_folder;
     bd.query(consulta, function(error,filas){
@@ -100,7 +108,7 @@ router.get('/baja/:id_folder/:id_usuario',  function(req, res, next) {
               }
           });
     
-     consulta = "SELECT usuarios.id_usuario, usuarios.usuario, folders.nombre, folders.id_folder from folders INNER JOIN usuarios ON usuarios.id_usuario = folders.id_usuario WHERE folders.id_usuario=" + v_id_usuario 
+     consulta = "SELECT usuarios.id_usuario, usuarios.usuario, folders.nombre, folders.id_folder from folders INNER JOIN usuarios ON usuarios.id_usuario = folders.id_usuario WHERE folders.id_usuario=" + v_id_usuario +" order by folders.nombre"
      console.log (consulta);
         
           bd.query(consulta, function(error,filas){
