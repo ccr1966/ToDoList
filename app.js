@@ -12,8 +12,8 @@ var http = require('http');
 var session = require('express-session')
 var bodyParser = require('body-parser');
 
-var ccr = express();
-
+var app = express();
+/*
 var cliente = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -23,6 +23,19 @@ var cliente = mysql.createConnection({
 
 
 cliente.database = 'basefinalnode';
+*/
+
+
+var cliente = mysql.createConnection({
+  host     : 'us-cdbr-east-03.cleardb.com',
+  user     : 'bce33da1515f55',
+  password : 'd6c9f036',
+  port : 3306,
+  database : 'heroku_b9f56a6726ed889'
+});
+
+cliente.database = 'heroku_b9f56a6726ed889';
+
 
   //-----------------------------------------------  
 //path de login
@@ -32,26 +45,26 @@ var items = require('./routes/items');
 var folders = require('./routes/folders');
 
 // view engine setup
-ccr.set('views', path.join(__dirname, 'views'));
-ccr.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
 
 //especificamos el subdirectorio donde se encuentran las páginas estáticas
-ccr.use(express.static(__dirname + '/public'));
-ccr.use('/', routes);
-ccr.use('/usuarios', usuarios);
-ccr.use('/items', items);
-ccr.use('/folders', folders);
+app.use(express.static(__dirname + '/public'));
+app.use('/', routes);
+app.use('/usuarios', usuarios);
+app.use('/items', items);
+app.use('/folders', folders);
 
-ccr.use(session({secret: '123456', resave: true, saveUninitialized: true}));
+app.use(session({secret: '123456', resave: true, saveUninitialized: true}));
 
-ccr.use(logger('dev'));
-ccr.use(bodyParser.json());
-ccr.use(bodyParser.urlencoded({ extended: false }));
-ccr.use(cookieParser());
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
-ccr.set('port', process.env.PORT || 4300);
+app.set('port', process.env.PORT || 4300);
 
 http.createServer(ccr).listen(ccr.get('port'), function(){
-  console.log('el servidor EXPRESS en puerto ' + ccr.get('port'));
+  console.log('el servidor EXPRESS en puerto ' + app.get('port'));
 });
 module.exports=cliente;
