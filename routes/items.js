@@ -1,11 +1,14 @@
-
 var express = require('express');
 var router = express.Router();
 
 //incluimos el paquete bd con la conexion a la tabla sql
 var bd=require('./bd');
 
+//var bodyParser = require('body-parser');
+//router.use(bodyParser.urlencoded({ extended: false }));
+
 router.use(express.urlencoded({ extended: false }));
+
 var v_hecho;
 
 //Alta de registros
@@ -36,7 +39,7 @@ router.post('/alta',  function(req, res, next) {
           }
       });    //query insert
 
-      consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = "  + req.body.id_folder +" order by item.descripcion";
+      consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = "  + req.body.id_folder ;
       console.log (consulta);
     
       bd.query(consulta, function(error,filas){
@@ -63,7 +66,7 @@ router.get('/listadoItems/:id_folder/:id_usuario', function(req, res, next) {
     
 
   console.log('LISTADO ITEMS  hace select de items')
-  consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + v_id_folder + " order by item.descripcion";
+  consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + v_id_folder;
 
     console.log(consulta);
 
@@ -154,7 +157,7 @@ console.log(v_hecho);
     }
     else{
         console.log('en CONFIRMAR MODIFICACION va a hacer select de items')
-        consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + req.body.id_folder +" order by item.descripcion";
+        consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + req.body.id_folder;
       
           console.log(consulta);
       
@@ -191,7 +194,7 @@ router.get('/baja/:id_item/:id_folder',  function(req, res, next) {
           
 
           console.log('en BAJA va a hacer select de items')
-          consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + id_folder +" order by item.descripcion";
+          consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + id_folder;
         
             console.log(consulta);
         
@@ -227,4 +230,4 @@ router.get('/baja/:id_item/:id_folder',  function(req, res, next) {
                 });//query select items
   });
 
-  module.exports = router;
+module.exports = router;

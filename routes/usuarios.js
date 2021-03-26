@@ -3,7 +3,8 @@ var router = express.Router();
 
 var bd=require('./bd');
 
-router.use(express.urlencoded({ extended: false }));
+var bodyParser = require('body-parser');
+router.use(bodyParser.urlencoded({ extended: false }));
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
