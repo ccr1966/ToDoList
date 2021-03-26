@@ -5,14 +5,8 @@ var router = express.Router();
 var bd=require('./bd');
 
 var bodyParser = require('body-parser');
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-//Requerimos el módulo 'fs' para la copia de archivos
-var fs = require('fs');
-
-//Requerimos el módulo 'multer' y llamamos a la función multer pasando como dato el directorio donde se suben los archivos
-var multer = require('multer');
-var upload = multer({dest: './uploads/'});
+router.use(bodyParser.urlencoded({ extended: false }));
 
 var v_hecho;
 
@@ -24,8 +18,8 @@ router.get('/alta/:id_folder', function(req, res, next) {
   });
 
 //Cuando se presiona el botón submit procedemos a capturar dicha ruta donde procedemos a cargar los datos en la tabla de la base de datos
-router.post('/alta',  urlencodedParser, upload.single("imagen"), function(req, res, next) {
-    console.log(req.file.filename);
+router.post('/alta',  function(req, res, next) {
+    
     console.log(req.body.descripcion);
     console.log(req.body.id_folder);
 
@@ -129,7 +123,7 @@ console.log(consulta);
 });
 
 
-router.post('/confirmarModificacion',  urlencodedParser, upload.single("imagen"), function(req, res, next) {
+router.post('/confirmarModificacion',  function(req, res, next) {
 
     if ((req.body.hecho==1) || (req.body.hecho==true)|| (req.body.hecho=="on")){
         v_hecho=true;
@@ -140,6 +134,7 @@ router.post('/confirmarModificacion',  urlencodedParser, upload.single("imagen")
     console.log(req.body.id_item);
     console.log(req.body.descripcion);
 console.log(req.body.hecho);
+console.log(req.body.id_folder);
 console.log(v_hecho);
 
      var registro={
@@ -150,19 +145,34 @@ console.log(v_hecho);
 
       consulta ="UPDATE items SET descripcion= '" + req.body.descripcion  +"' , hecho= " + v_hecho +  " WHERE id_item = " + req.body.id_item
       console.log(consulta);
-bd.query(consulta, function(error,filas){
+
+    bd.query(consulta, function(error,filas){
     console.log('consulta');
     if (error) {            
         console.log('error en UPDATE');
         console.log(error);
         return;
     }
-    res.render('MensajesAlUsuario',{mensaje:'Good news, the item was updated successfully'});
-});
+    });//query de UPDATE
+
+    console.log('en CONFIRMAR MODIFICACION va a hacer select de items')
+          consulta = "select items.hecho, items.descripcion, items.id_item, folders.nombre,folders.id_folder, usuarios.id_usuario, usuarios.usuario from items INNER JOIN folders ON folders.id_folder=items.id_folder INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE items.id_folder = " + req.body.id_folder;
+        
+            console.log(consulta);
+        
+            bd.query(consulta, function(error,filas){
+                    if (error) {            
+                        console.log('error en CONFIRMAR MODIFICACIONla consulta SELECT de items 2');
+                        return;
+                    }
+                    if (filas.length>0) {
+                        res.render('verItems',{items:filas});
+                    } 
+                });//query select items
 });
 
 
-router.get('/baja/:id_item/:id_folder',  urlencodedParser, function(req, res, next) {
+router.get('/baja/:id_item/:id_folder',  function(req, res, next) {
     var id_item = req.params.id_item;
     var id_folder = req.params.id_folder;
 

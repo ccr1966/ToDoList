@@ -4,7 +4,9 @@ var router = express.Router();
 var bd=require('./bd');
 
 var bodyParser = require('body-parser');
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+
+router.use(bodyParser.urlencoded({ extended: false }));
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -12,7 +14,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.post('/chequearLogin', urlencodedParser, function(req, res, next) {
+router.post('/chequearLogin',  function(req, res, next) {
   
   //console.log(req.body.usuario);
   var consulta = "select id_usuario, usuario, clave, nombre, apellido from usuarios where usuarios.usuario= '"+ req.body.usuario + "' and usuarios.clave = '" + req.body.clave + "'"

@@ -5,15 +5,7 @@ var router = express.Router();
 var bd=require('./bd');
 
 var bodyParser = require('body-parser');
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
-//Requerimos el módulo 'fs' para la copia de archivos
-var fs = require('fs');
-
-//Requerimos el módulo 'multer' y llamamos a la función multer pasando como dato el directorio donde se suben los archivos
-var multer = require('multer');
-var upload = multer({dest: './uploads/'});
-
+router.use(bodyParser.urlencoded({ extended: false }));
 
 //Alta de registros
 //Capturamos la ruta del alta y mostramos la plantilla correspondiente 
@@ -22,8 +14,9 @@ router.get('/alta/:id_usuario', function(req, res, next) {
   });
 
 //Cuando se presiona el botón submit procedemos a capturar dicha ruta donde procedemos a cargar los datos en la tabla de la base de datos
-router.post('/alta/',  urlencodedParser, upload.single("imagen"), function(req, res, next) {
-    console.log(req.file.filename);
+router.post('/alta', function(req, res, next) {
+
+    console.log('en ALTA POST folders  nombre y usuario');
     console.log(req.body.nombre);
     console.log(req.body.id_usuario);
 
@@ -41,12 +34,12 @@ router.post('/alta/',  urlencodedParser, upload.single("imagen"), function(req, 
           }
         });//query insert
 
-          consulta = "select * from folders WHERE id_usuario=" + req.body.id_usuario 
-          console.log (consulta);
+          consulta = "select folders.nombre, folders.id_folder, usuarios.id_usuario, usuarios.usuario from folders INNER JOIN usuarios ON usuarios.id_usuario=folders.id_usuario WHERE folders.id_usuario=" + req.body.id_usuario 
+          console.log ('en ALTA POST'+consulta);
         
           bd.query(consulta, function(error,filas){
                     if (error) {            
-                        console.log('error en la consulta SELECT de folders');
+                        console.log('ALTA POST folders error en la consulta SELECT de folders');
                         return;
                     }
                     if (filas.length>0) {
@@ -63,7 +56,8 @@ router.get('/listadoFolders/:id_usuario', function(req, res, next) {
   
   consulta = "select folders.nombre, usuarios.usuario, usuarios.id_usuario, folders.id_folder from folders INNER JOIN USUARIOS ON folders.id_usuario=usuarios.id_usuario WHERE folders.id_usuario= " + req.params.id_usuario 
   console.log (consulta);
-
+ 
+ 
   bd.query(consulta, function(error,filas){
             if (error) {            
                 console.log('error en la consulta SELECT de folders');
@@ -72,21 +66,30 @@ router.get('/listadoFolders/:id_usuario', function(req, res, next) {
             if (filas.length>0) {
                 res.render('verFolders',{folders:filas});
             } 
-            else {
-              console.log('hace render sin rows y pasa id usuario ....')
-
-                  res.render('verFolders1',{id_usuario:req.params.id_usuario});
-            
-            
-              //  res.render('mensajeitems',{mensaje:'No existe el codigo de item ingresado'});
-            }    
+            else{
+                    //entra aca cuando no hay folders... busco usuario en otro lado
+                    // select usuario cuando no quedan folders
+                    console.log('ENTRA POR VACIO hace render sin rows y pasa id usuario ....')
+                    consulta = "select usuarios.usuario, usuarios.id_usuario FROM usuarios where id_usuario =" + req.params.id_usuario;
+                    bd.query(consulta, function(error,filas){
+                    if (error) {            
+                                    console.log('EN LISTADOFOLDER error en select usuario');
+                                    console.log(error);
+                                    return;
+                            }
+                        res.render('verFolders1',{folders:filas});
+                    });// select folders cuando no hay
+                            
+            }
         });
+   
 });
 
 
-router.get('/baja/:id_folder/:id_usuario',  urlencodedParser, function(req, res, next) {
+router.get('/baja/:id_folder/:id_usuario',  function(req, res, next) {
     var id_folder = req.params.id_folder;
     var v_id_usuario= req.params.id_usuario;
+ 
 
     var consulta  ="delete FROM folders where id_folder =" + id_folder;
     bd.query(consulta, function(error,filas){
@@ -97,8 +100,8 @@ router.get('/baja/:id_folder/:id_usuario',  urlencodedParser, function(req, res,
               }
           });
     
-    consulta = "select * from folders WHERE id_usuario=" + v_id_usuario 
-    console.log (consulta);
+     consulta = "SELECT usuarios.id_usuario, usuarios.usuario, folders.nombre, folders.id_folder from folders INNER JOIN usuarios ON usuarios.id_usuario = folders.id_usuario WHERE folders.id_usuario=" + v_id_usuario 
+     console.log (consulta);
         
           bd.query(consulta, function(error,filas){
                     if (error) {            
@@ -108,16 +111,26 @@ router.get('/baja/:id_folder/:id_usuario',  urlencodedParser, function(req, res,
                     if (filas.length>0) {
                         res.render('verFolders',{folders:filas});
                     } 
-                    else {
-                      console.log('hace render sin rows y pasa id usuario ....')
-        
-                          res.render('verFolders1',{id_usuario:v_id_usuario});
-                    
-                    
-                      //  res.render('mensajeitems',{mensaje:'No existe el codigo de item ingresado'});
-                    }    
-                });
-  
+                    else{
+                        // select usuario cuando no quedan folders
+                        console.log('BAJA hace render sin rows a buscar usuario ....')
+                        consulta = "select usuarios.usuario, usuarios.id_usuario FROM usuarios where id_usuario =" + v_id_usuario;
+                        console.log(consulta);
+
+                        bd.query(consulta, function(error,filas){
+                        if (error) {            
+                                    console.log('EN BAJA FOLDER error en select usuario');
+                                    console.log(error);
+                                    return;
+                            }
+                            res.render('verFolders1',{folders:filas});
+                        });// select folders cuando no hay
+
+                    }
+                });// select folders cuando todavia quedan
+
+ 
+    
 });
 
 
