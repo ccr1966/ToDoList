@@ -13,45 +13,33 @@
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <table>
         <tr>
-          <td >
-            <img src="/img/todolist.jpeg"   height="80" alt="">
-          </td> 
-          <td >
-            <a class="navbar-brand" href="#">
+          <td><img src="/img/todolist.jpeg"   height="80" alt=""></td> 
+          <td><a class="navbar-brand" href="#">
                   TO-DO List in Folder:&nbsp; {{#each items}}{{#if @first}} <font color="white">{{nombre}} {{/if}}{{/each}} 
           </td>
           <td width="800" align="right">
             {{#each items}}  {{#if @first}} <a class=" navbar-brand" href="/items/alta/{{id_folder}}">Add</a> {{/if}} {{/each}}
-            </td>
-             <td>
-                  {{#each items}}  {{#if @first}}
-                 <a class="navbar-brand" href="/folders/listadoFolders/{{id_usuario}}">Back</a> 
-                 {{/if}} {{/each}} </td>
-         <td><a class="navbar-brand" href="/">Quit</a> </td>
+          </td>
+          <td>
+              {{#each items}}  {{#if @first}}
+              <a class="navbar-brand" href="/folders/listadoFolders/{{id_usuario}}">Back</a> 
+              {{/if}} {{/each}} 
+          </td>
+          <td><a class="navbar-brand" href="/">Quit</a> </td>
           <td width="200" align="right">
             {{#each items}}
              {{#if @first}} <font color="white">User: {{usuario}} {{/if}} 
-            {{/each}} </td>
+            {{/each}} 
+          </td>
         </tr>
         </table>
-</nav>
-<div class="jumbotron jumbotron-fluid" height="100%" width="100%">
-  <!--div class="container" width="100%"-->
-            
-  <div>
- 
-    <table class="table table-hover" width="100%">
-  
-   <tr>
-     
-      <!--td width="10">{{ id}}</td-->
-      <td width="250">There are no items for this folder, yet...</td>
-
-    </tr>
-     
-</table>
- 
-
+  </nav>
+   <div class="jumbotron jumbotron-fluid" height="100%" width="100%">
+        <table class="table table-hover" width="100%">
+        <tr>
+          <td width="250">There are no items for this folder, yet...</td>
+        </tr>
+        </table>
     </div>
 </body>
 </html>
