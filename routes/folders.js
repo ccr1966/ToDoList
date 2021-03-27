@@ -4,9 +4,9 @@ var router = express.Router();
 //incluimos el paquete bd con la conexion a la tabla sql
 var bd=require('./bd');
 
-//var bodyParser = require('body-parser');
-//router.use(bodyParser.urlencoded({ extended: false }));
-router.use(express.urlencoded({ extended: false }));
+var bodyParser = require('body-parser');
+router.use(bodyParser.urlencoded({ extended: false }));
+
 
 //Alta de registros
 //Capturamos la ruta del alta y mostramos la plantilla correspondiente 
@@ -52,7 +52,8 @@ router.post('/alta', function(req, res, next) {
 
 
 router.get('/listadoFolders/:id_usuario', function(req, res, next) {
-  console.log('va a hacer select de folders');
+
+  console.log('LISTADO FOLDERS - va a hacer select de folders');
   console.log('id_usuario ' + req.params.id_usuario);
   
   consulta = "select folders.nombre, usuarios.usuario, usuarios.id_usuario, folders.id_folder from folders INNER JOIN USUARIOS ON folders.id_usuario=usuarios.id_usuario WHERE folders.id_usuario= " + req.params.id_usuario 
@@ -137,11 +138,6 @@ router.get('/baja/:id_folder/:id_usuario',  function(req, res, next) {
 
                     }
                 });// select folders cuando todavia quedan
-
- 
-    
 });
-
-
 
 module.exports = router;

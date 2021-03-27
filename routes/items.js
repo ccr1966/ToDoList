@@ -143,7 +143,7 @@ console.log(v_hecho);
         descripcion:req.body.descripcion,
         hecho:req.body.hecho,
       };
-      console.log("cargo variable registro");
+      console.log("EN CONFIRMAR MODIFICACION cargo variable registro");
 
       consulta ="UPDATE items SET descripcion= '" + req.body.descripcion  +"' , hecho= " + v_hecho +  " WHERE id_item = " + req.body.id_item
       console.log(consulta);
